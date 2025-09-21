@@ -36,7 +36,21 @@
             <label for="operation" class="form-label">Record Type / Operation</label>
             <input type="text" class="form-control" id="operation" name="operation" required>
         </div>
-        
+
+        <div class="mb-3">
+            <label for="record_type" class="form-label">Record Type (e.g., Diagnosis, Test Result)</label>
+            <input type="text" class="form-control" id="record_type" name="record_type" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="operation" class="form-label">Operation</label>
+            <select class="form-control" id="operation" name="operation" required>
+                <option>Add</option>
+                <option>Update</option>
+                <option>Share</option>
+            </select>
+        </div>
+                
         <div class="mb-3">
             <label for="prescription" class="form-label">Details (Prescription/Test)</label>
             <textarea class="form-control" id="prescription" name="prescription" rows="4" required></textarea>

@@ -31,9 +31,14 @@
         <div class="card-icon">
             <i class="fas fa-notes-medical"></i>
         </div>
-        <h3>{{ record.record_id }} ({{ record.operation }})</h3>
-        <p><strong>Doctor:</strong> {{ record.doctor_id }} | <strong>Hospital:</strong> {{ record.hospital_id }} | <strong>Timestamp:</strong> {{ record.timestamp }}</p>
+        <h3>{{ record.record_id }} ({{ record.record_type }})</h3>
+        <p>
+            <strong>Operation:</strong> {{ record.operation }} | 
+            <strong>Doctor:</strong> {{ record.doctor_id }} | 
+            <strong>Hospital:</strong> {{ record.hospital_id }}
+        </p>
         <p><strong>Details:</strong> {{ record.prescription }}</p>
+        <p><small><strong>Timestamp:</strong> {{ record.timestamp }}</small></p>
     </div>
     {% endfor %}
 </div>

@@ -147,7 +147,7 @@ def index():
         next_delegate=next_delegate
     )
 
-
+# AFTER
 @app.route("/add_record", methods=["GET", "POST"])
 def add_record():
     if request.method == "POST":
@@ -161,12 +161,13 @@ def add_record():
         hospital_id = request.form["hospital_id"]
         insurance_id = request.form["insurance_id"]
         record_id = request.form["record_id"]
-        operation = request.form["operation"]
+        record_type = request.form["record_type"] # NEW
+        operation = request.form["operation"]     # NEW
         prescription = request.form["prescription"]
         amount = request.form["amount"]
 
         new_tx = Transaction(
-            hospital_id, doctor_id, patient_id, insurance_id, record_id, operation, prescription, amount
+            hospital_id, doctor_id, patient_id, insurance_id, record_id, record_type, operation, prescription, amount
         )
         healthcare_blockchain.add_transaction(new_tx)
         save_blockchain(healthcare_blockchain)

@@ -6,7 +6,6 @@
 </div>
 
 <div class="block-detail-container">
-    <!-- Block Information Card -->
     <div class="detail-card">
         <div class="card-header">
             <i class="fas fa-cube"></i>
@@ -48,7 +47,6 @@
         </div>
     </div>
     
-    <!-- Hash Information Card -->
     <div class="detail-card">
         <div class="card-header">
             <i class="fas fa-fingerprint"></i>
@@ -82,7 +80,6 @@
         </div>
     </div>
     
-    <!-- Transactions Card -->
     <div class="detail-card">
         <div class="card-header">
             <i class="fas fa-exchange-alt"></i>
@@ -113,6 +110,10 @@
                     <div class="tx-row">
                         <span class="tx-label">Hospital:</span>
                         <span class="tx-value">{{ tx.hospital_id if tx.hospital_id else 'N/A' }}</span>
+                    </div>
+                    <div class="tx-row">
+                        <span class="tx-label">Record Type:</span>
+                        <span class="tx-value">{{ tx.record_type if tx.record_type else 'N/A' }}</span>
                     </div>
                     <div class="tx-row">
                         <span class="tx-label">Operation:</span>

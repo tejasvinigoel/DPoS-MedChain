@@ -2,14 +2,16 @@ import datetime
 import hashlib
 from utils import log_action
 
+# AFTER
 class Transaction:
-    def __init__(self, hospital_id, doctor_id, patient_id, insurance_id, record_id, operation, prescription, amount):
+    def __init__(self, hospital_id, doctor_id, patient_id, insurance_id, record_id, record_type, operation, prescription, amount):
         self.hospital_id = hospital_id
         self.doctor_id = doctor_id
         self.patient_id = patient_id
         self.insurance_id = insurance_id
         self.record_id = record_id
-        self.operation = operation  # "Add", "Update", "Share" or free text like "Diagnosis"
+        self.record_type = record_type  # e.g., Diagnosis, Prescription, Test Result
+        self.operation = operation      # e.g., Add, Update, Share
         self.prescription = prescription
         self.amount = amount
         self.timestamp = datetime.datetime.now().isoformat()
@@ -21,6 +23,7 @@ class Transaction:
             "patient_id": self.patient_id,
             "insurance_id": self.insurance_id,
             "record_id": self.record_id,
+            "record_type": self.record_type, # ADDED
             "operation": self.operation,
             "prescription": self.prescription,
             "amount": self.amount,
@@ -28,21 +31,23 @@ class Transaction:
         }
 
     def calculate_hash(self):
-        tx_string = f"{self.hospital_id}{self.doctor_id}{self.patient_id}{self.record_id}{self.operation}{self.timestamp}"
+        # Add the new fields to the hash for uniqueness
+        tx_string = f"{self.hospital_id}{self.doctor_id}{self.patient_id}{self.record_id}{self.record_type}{self.operation}{self.timestamp}"
         return hashlib.sha256(tx_string.encode()).hexdigest()
 
 class Block:
-    def __init__(self, transactions, previous_hash, delegate_id):
+    def __init__(self, transactions, previous_hash, delegate_id, nonce=0):
         self.timestamp = datetime.datetime.now().isoformat()
-        self.transactions = transactions  # list of Transaction objects
+        self.transactions = transactions
         self.previous_hash = previous_hash
-        # merkle root computed from transaction hashes
         self.merkle_root = self.calculate_merkle_root()
-        self.delegate_id = delegate_id  # who created this block
+        self.delegate_id = delegate_id # Consensus-related data
+        self.nonce = nonce             # Nonce/Consensus-related data
         self.hash = self.calculate_hash()
 
     def calculate_hash(self):
-        block_string = f"{self.timestamp}{self.merkle_root}{self.previous_hash}{self.delegate_id}"
+        # Add nonce to the block hash calculation
+        block_string = f"{self.timestamp}{self.merkle_root}{self.previous_hash}{self.delegate_id}{self.nonce}"
         return hashlib.sha256(block_string.encode()).hexdigest()
 
     def calculate_merkle_root(self):
@@ -81,7 +86,7 @@ class Blockchain:
         self.max_delegates = max_delegates
 
     def create_genesis_block(self):
-        return Block(transactions=[], previous_hash="0", delegate_id="genesis")
+        return Block(transactions=[], previous_hash="0", delegate_id="genesis", nonce=0)
 
     def get_last_block(self):
         return self.chain[-1]
@@ -199,9 +204,10 @@ class Blockchain:
 
         last_block = self.get_last_block()
         new_block = Block(
-            transactions=self.pending_transactions.copy(),  # use a copy to persist TXs correctly
+            transactions=self.pending_transactions.copy(),
             previous_hash=last_block.hash,
-            delegate_id=delegate_id
+            delegate_id=delegate_id,
+            nonce=last_block.nonce + 1 if hasattr(last_block, 'nonce') else 0 # Simple nonce increment
         )
 
         # Append and clear pending txs
@@ -224,6 +230,7 @@ class Blockchain:
                     history.append({
                         "block_index": block_index,
                         "record_id": tx.record_id,
+                        "record_type": tx.record_type, # ADDED
                         "operation": tx.operation,
                         "doctor_id": tx.doctor_id,
                         "hospital_id": tx.hospital_id,
