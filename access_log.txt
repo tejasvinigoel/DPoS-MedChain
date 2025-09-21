@@ -1,0 +1,8 @@
+[2025-09-21 22:28:45] ADMIN ACTION: Registered user admin (Admin User) as Administrator.
+[2025-09-21 22:28:45] ADMIN ACTION: Registered user dr_alice (Dr. Alice) as Doctor.
+[2025-09-21 22:28:45] ADMIN ACTION: Registered user dr_bob (Dr. Bob) as Doctor.
+[2025-09-21 22:28:45] ADMIN ACTION: Registered user patient_x (Patient X) as Patient.
+[2025-09-21 22:28:45] ADMIN ACTION: Registered user patient_y (Patient Y) as Patient.
+[2025-09-21 22:28:50] ADMIN: admin viewed the access log.
+[2025-09-21 22:28:55] ADMIN: admin viewed the access log.
+[2025-09-21 22:29:45] ACCESS DENIED: Non-doctor 7839 tried to add a record.

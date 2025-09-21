@@ -1,0 +1,360 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="hero">
+    <h1>Block #{{ block.index }} Details</h1>
+    <p>Complete block structure and transaction details</p>
+</div>
+
+<div class="block-detail-container">
+    <!-- Block Information Card -->
+    <div class="detail-card">
+        <div class="card-header">
+            <i class="fas fa-cube"></i>
+            <h3>Block Information</h3>
+        </div>
+        
+        <div class="info-grid">
+            <div class="info-item">
+                <div class="info-label">
+                    <i class="fas fa-hashtag"></i>
+                    Block Index
+                </div>
+                <div class="info-value">#{{ block.index }}</div>
+            </div>
+            
+            <div class="info-item">
+                <div class="info-label">
+                    <i class="fas fa-clock"></i>
+                    Timestamp
+                </div>
+                <div class="info-value">{{ block.timestamp }}</div>
+            </div>
+            
+            <div class="info-item">
+                <div class="info-label">
+                    <i class="fas fa-dice"></i>
+                    Nonce
+                </div>
+                <div class="info-value">{{ block.nonce }}</div>
+            </div>
+            
+            <div class="info-item">
+                <div class="info-label">
+                    <i class="fas fa-list"></i>
+                    Transaction Count
+                </div>
+                <div class="info-value">{{ block.transaction_count }}</div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Hash Information Card -->
+    <div class="detail-card">
+        <div class="card-header">
+            <i class="fas fa-fingerprint"></i>
+            <h3>Cryptographic Hashes</h3>
+        </div>
+        
+        <div class="hash-grid">
+            <div class="hash-item">
+                <div class="hash-label">
+                    <i class="fas fa-tree"></i>
+                    Merkle Root
+                </div>
+                <div class="hash-value">{{ block.merkle_root }}</div>
+            </div>
+            
+            <div class="hash-item">
+                <div class="hash-label">
+                    <i class="fas fa-link"></i>
+                    Previous Block Hash
+                </div>
+                <div class="hash-value">{{ block.previous_hash }}</div>
+            </div>
+            
+            <div class="hash-item">
+                <div class="hash-label">
+                    <i class="fas fa-hashtag"></i>
+                    Current Block Hash
+                </div>
+                <div class="hash-value current-hash">{{ block.hash }}</div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Transactions Card -->
+    <div class="detail-card">
+        <div class="card-header">
+            <i class="fas fa-exchange-alt"></i>
+            <h3>Transactions ({{ block.transaction_count }})</h3>
+        </div>
+        
+        {% if block.transactions %}
+        <div class="transactions-list">
+            {% for tx in block.transactions %}
+            <div class="transaction-item">
+                <div class="tx-header">
+                    <div class="tx-id">
+                        <i class="fas fa-file-medical"></i>
+                        Record: {{ tx.record_id if tx.record_id else 'N/A' }}
+                    </div>
+                    <div class="tx-amount">${{ tx.amount if tx.amount else '0' }}</div>
+                </div>
+                
+                <div class="tx-details">
+                    <div class="tx-row">
+                        <span class="tx-label">Doctor:</span>
+                        <span class="tx-value">{{ tx.doctor_id if tx.doctor_id else 'N/A' }}</span>
+                    </div>
+                    <div class="tx-row">
+                        <span class="tx-label">Patient:</span>
+                        <span class="tx-value">{{ tx.patient_id if tx.patient_id else 'N/A' }}</span>
+                    </div>
+                    <div class="tx-row">
+                        <span class="tx-label">Hospital:</span>
+                        <span class="tx-value">{{ tx.hospital_id if tx.hospital_id else 'N/A' }}</span>
+                    </div>
+                    <div class="tx-row">
+                        <span class="tx-label">Operation:</span>
+                        <span class="tx-value">{{ tx.operation if tx.operation else 'N/A' }}</span>
+                    </div>
+                    {% if tx.prescription %}
+                    <div class="tx-row">
+                        <span class="tx-label">Details:</span>
+                        <span class="tx-value">{{ tx.prescription }}</span>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="empty-transactions">
+            <i class="fas fa-inbox" style="font-size: 2rem; opacity: 0.3; margin-bottom: 1rem;"></i>
+            <p>No transactions in this block</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<div class="action-buttons">
+    <a href="{{ url_for('view_blocks') }}" class="btn btn-secondary">
+        <i class="fas fa-arrow-left"></i>
+        Back to All Blocks
+    </a>
+    {% if block.index > 0 %}
+    <a href="{{ url_for('view_block_detail', block_index=block.index-1) }}" class="btn">
+        <i class="fas fa-chevron-left"></i>
+        Previous Block
+    </a>
+    {% endif %}
+</div>
+
+<style>
+.block-detail-container {
+    display: grid;
+    gap: 2rem;
+    margin-bottom: 3rem;
+}
+
+.detail-card {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 2rem;
+}
+
+.card-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    color: white;
+}
+
+.card-header i {
+    color: #4facfe;
+    font-size: 1.3rem;
+}
+
+.card-header h3 {
+    margin: 0;
+    font-size: 1.3rem;
+}
+
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+}
+
+.info-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.info-label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: rgba(255, 255, 255, 0.8);
+    font-weight: 500;
+    font-size: 0.9rem;
+}
+
+.info-label i {
+    color: #4facfe;
+    width: 16px;
+}
+
+.info-value {
+    color: white;
+    font-family: 'Courier New', monospace;
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.hash-grid {
+    display: grid;
+    gap: 1.5rem;
+}
+
+.hash-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.hash-label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: rgba(255, 255, 255, 0.8);
+    font-weight: 500;
+}
+
+.hash-label i {
+    color: #4facfe;
+    width: 16px;
+}
+
+.hash-value {
+    color: white;
+    font-family: 'Courier New', monospace;
+    font-size: 0.85rem;
+    word-break: break-all;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 0.5rem;
+    border-radius: 5px;
+    border-left: 3px solid #4facfe;
+}
+
+.current-hash {
+    border-left-color: #00f2fe;
+}
+
+.transactions-list {
+    display: grid;
+    gap: 1rem;
+}
+
+.transaction-item {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+    padding: 1rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.tx-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.tx-id {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: white;
+    font-weight: 600;
+}
+
+.tx-id i {
+    color: #4facfe;
+}
+
+.tx-amount {
+    color: #00f2fe;
+    font-weight: 600;
+}
+
+.tx-details {
+    display: grid;
+    gap: 0.5rem;
+}
+
+.tx-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.tx-label {
+    color: rgba(255, 255, 255, 0.7);
+    font-weight: 500;
+    min-width: 80px;
+}
+
+.tx-value {
+    color: white;
+    text-align: right;
+    font-family: 'Courier New', monospace;
+    font-size: 0.9rem;
+}
+
+.empty-transactions {
+    text-align: center;
+    color: rgba(255, 255, 255, 0.6);
+    padding: 2rem;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.btn-secondary {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.btn-secondary:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+@media (max-width: 768px) {
+    .info-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .tx-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.25rem;
+    }
+    
+    .tx-value {
+        text-align: left;
+    }
+}
+</style>
+{% endblock %}

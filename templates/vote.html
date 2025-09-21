@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="hero">
+    <h1>Vote for Delegate</h1>
+    <p>Cast your vote to elect trusted delegates for the network</p>
+</div>
+
+<div class="card" style="max-width: 600px; margin: 0 auto;">
+    <form method="POST">
+        <div class="mb-3">
+            <label for="voter_id" class="form-label">Your User ID</label>
+            <input type="text" class="form-control" id="voter_id" name="voter_id" placeholder="Enter your user ID" required>
+        </div>
+        
+        <div class="mb-3">
+            <label for="candidate_id" class="form-label">Candidate User ID</label>
+            <input type="text" class="form-control" id="candidate_id" name="candidate_id" placeholder="Enter candidate user ID" required>
+        </div>
+        
+        <button type="submit" class="btn">
+            <i class="fas fa-vote-yea"></i>
+            Cast Vote
+        </button>
+    </form>
+</div>
+
+<style>
+.form-label {
+    color: white;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+    display: block;
+}
+
+.form-control {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 10px;
+    color: white;
+    padding: 0.75rem 1rem;
+    width: 100%;
+    transition: all 0.3s ease;
+}
+
+.form-control:focus {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: #4facfe;
+    box-shadow: 0 0 0 0.2rem rgba(79, 172, 254, 0.25);
+    color: white;
+}
+
+.form-control::placeholder {
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.mb-3 {
+    margin-bottom: 1.5rem;
+}
+</style>
+{% endblock %}

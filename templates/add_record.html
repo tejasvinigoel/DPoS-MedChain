@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="hero">
+    <h1>Add New Medical Record</h1>
+    <p>Securely add a new medical record to the blockchain</p>
+</div>
+
+<div class="card" style="max-width: 800px; margin: 0 auto;">
+    <form method="POST">
+        <div class="mb-3">
+            <label for="doctor_id" class="form-label">Doctor ID</label>
+            <input type="text" class="form-control" id="doctor_id" name="doctor_id" required>
+        </div>
+        
+        <div class="mb-3">
+            <label for="patient_id" class="form-label">Patient ID</label>
+            <input type="text" class="form-control" id="patient_id" name="patient_id" required>
+        </div>
+        
+        <div class="mb-3">
+            <label for="hospital_id" class="form-label">Hospital ID/Name</label>
+            <input type="text" class="form-control" id="hospital_id" name="hospital_id" required>
+        </div>
+        
+        <div class="mb-3">
+            <label for="insurance_id" class="form-label">Insurance ID/Name</label>
+            <input type="text" class="form-control" id="insurance_id" name="insurance_id" required>
+        </div>
+        
+        <div class="mb-3">
+            <label for="record_id" class="form-label">Record ID</label>
+            <input type="text" class="form-control" id="record_id" name="record_id" required>
+        </div>
+        
+        <div class="mb-3">
+            <label for="operation" class="form-label">Record Type / Operation</label>
+            <input type="text" class="form-control" id="operation" name="operation" required>
+        </div>
+        
+        <div class="mb-3">
+            <label for="prescription" class="form-label">Details (Prescription/Test)</label>
+            <textarea class="form-control" id="prescription" name="prescription" rows="4" required></textarea>
+        </div>
+        
+        <div class="mb-3">
+            <label for="amount" class="form-label">Amount</label>
+            <input type="number" class="form-control" id="amount" name="amount" value="0" min="0">
+        </div>
+        
+        <button type="submit" class="btn">
+            <i class="fas fa-plus"></i>
+            Add Record to Blockchain
+        </button>
+    </form>
+</div>
+
+<style>
+.form-label {
+    color: white;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+    display: block;
+}
+
+.form-control {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 10px;
+    color: white;
+    padding: 0.75rem 1rem;
+    width: 100%;
+    transition: all 0.3s ease;
+}
+
+.form-control:focus {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: #4facfe;
+    box-shadow: 0 0 0 0.2rem rgba(79, 172, 254, 0.25);
+    color: white;
+}
+
+.form-control::placeholder {
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.mb-3 {
+    margin-bottom: 1.5rem;
+}
+
+textarea.form-control {
+    resize: vertical;
+    min-height: 100px;
+}
+</style>
+{% endblock %}

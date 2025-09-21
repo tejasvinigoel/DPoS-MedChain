@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Welcome to Healthcare Blockchain</h2>
+<p><strong>Next Delegate to Forge:</strong> {{ next_delegate }}</p>
+
+<h4>Current Delegates:</h4>
+<ul>
+  {% for d in delegates %}
+    <li>{{ d }}</li>
+  {% endfor %}
+</ul>
+{% endblock %}

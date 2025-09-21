@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="hero" style="margin-top: 2rem;">
+    <h1>Forge a New Block</h1>
+    <p>Only elected delegates can forge the next block in the blockchain.</p>
+</div>
+
+<div class="card" style="max-width: 500px; margin: 2rem auto; padding: 2.5rem;">
+    <form method="POST">
+        <div class="mb-4">
+            <!--<label for="delegate_id" class="form-label">Delegate ID</label> -->
+            <input type="text" class="form-control" id="delegate_id" name="delegate_id" placeholder="Enter your delegate ID" required>
+        </div>
+        <button type="submit" class="btn btn-primary w-100">Forge Block</button>
+    </form>
+</div>
+
+<style>
+.hero {
+    text-align: center;
+    color: white;
+    margin-bottom: 2.5rem;
+}
+
+.card {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 15px;
+    padding: 2.5rem;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+}
+
+.form-label {
+    color: white;
+    font-weight: 500;
+    margin-top:0.75rem ;
+    margin-bottom: 0.75rem;
+}
+#delegate_id::placeholder {
+    color: rgb(188, 184, 184);
+    opacity: 1;
+}
+
+.form-control {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 10px;
+    color: rgb(85, 37, 37);
+    padding: 0.75rem 1rem;
+    width: 100%;
+}
+
+.form-control:focus {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: #4facfe;
+    box-shadow: 0 0 0 0.2rem rgba(79, 172, 254, 0.25);
+    color: white;
+}
+
+.mb-4 {
+    margin-bottom: 1.75rem !important;
+}
+</style>
+{% endblock %}

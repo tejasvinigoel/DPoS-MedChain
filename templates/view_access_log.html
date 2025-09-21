@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="hero">
+    <h1>System Access Log</h1>
+    <p>Requires administrator privileges to view.</p>
+</div>
+
+{% if log_content %}
+    <div class="card" style="margin: 0 auto; max-width: 900px;">
+        <h3 style="color: white; margin-bottom: 1rem;">Log Details</h3>
+        <pre style="background: rgba(0,0,0,0.3); padding: 1rem; border-radius: 10px; color: #eee; white-space: pre-wrap; word-wrap: break-word;">{{ log_content }}</pre>
+    </div>
+{% else %}
+    <div class="card" style="max-width: 500px; margin: 2rem auto;">
+        <form method="POST">
+            <div class="mb-3">
+                <label for="admin_id" class="form-label" style="color:white;">Administrator ID</label>
+                <input type="text" class="form-control" id="admin_id" name="admin_id" placeholder="Enter your administrator ID" required style="background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); color: white;">
+            </div>
+            <button type="submit" class="btn">
+                <i class="fas fa-user-shield"></i>
+                Authenticate and View Log
+            </button>
+        </form>
+    </div>
+{% endif %}
+{% endblock %}
