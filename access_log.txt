@@ -6,3 +6,17 @@
 [2025-09-21 22:28:50] ADMIN: admin viewed the access log.
 [2025-09-21 22:28:55] ADMIN: admin viewed the access log.
 [2025-09-21 22:29:45] ACCESS DENIED: Non-doctor 7839 tried to add a record.
+[2025-09-21 22:56:52] STAKE: dr_alice staked 100.0. Total stake: 100.0
+[2025-09-21 22:56:52] STAKE: dr_alice staked 100 tokens
+[2025-09-21 22:57:33] STAKE: dr_bob staked 100.0. Total stake: 100.0
+[2025-09-21 22:57:33] STAKE: dr_bob staked 100 tokens
+[2025-09-21 22:58:28] VOTE: dr_alice voted for dr_alice (weight 100.0).
+[2025-09-21 22:58:28] VOTE: dr_alice voted for dr_alice
+[2025-09-21 22:58:43] VOTE: dr_bob voted for dr_bob (weight 100.0).
+[2025-09-21 22:58:43] VOTE: dr_bob voted for dr_bob
+[2025-09-21 23:01:41] ELECTION: Delegates elected: dr_alice, dr_bob
+[2025-09-21 23:01:41] DELEGATES ELECTED: dr_alice, dr_bob
+[2025-09-21 23:01:43] ELECTION: Delegates elected: dr_alice, dr_bob
+[2025-09-21 23:01:43] DELEGATES ELECTED: dr_alice, dr_bob
+[2025-09-21 23:07:25] TRANSACTION ADDED: DIAG-001 by dr_alice for patient_x
+[2025-09-21 23:07:25] TRANSACTION: Doctor dr_alice created record DIAG-001 for patient_x
