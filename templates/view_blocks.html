@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Blockchain Blocks</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { padding: 8px; border: 1px solid #ccc; text-align: left; }
+        th { background-color: #f2f2f2; }
+        tr:hover { background-color: #f9f9f9; }
+    </style>
+</head>
+<body>
+    <h1>Blockchain Explorer</h1>
+    <p>Total Blocks: {{ blocks|length }}</p>
+
+    <table>
+        <tr>
+            <th>Index</th>
+            <th>Timestamp</th>
+            <th>Hash</th>
+            <th>Prev Hash</th>
+            <th>Tx Count</th>
+            <th>Details</th>
+        </tr>
+        {% for block in blocks %}
+        <tr>
+            <td>{{ block.index }}</td>
+            <td>{{ block.timestamp }}</td>
+            <td>{{ block.hash }}</td>
+            <td>{{ block.previous_hash }}</td>
+            <td>{{ block.transaction_count }}</td>
+            <td>
+                <a href="{{ url_for('view_block_detail', block_index=block.index) }}">
+                    View
+                </a>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <p><a href="{{ url_for('index') }}">⬅ Back to Home</a></p>
+</body>
+</html>

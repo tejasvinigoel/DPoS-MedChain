@@ -211,17 +211,17 @@ def view_history():
         patient_id = request.form["patient_id"]
         viewer_role = healthcare_blockchain.users.get(viewer_id, {}).get("role")
         
-        if viewer_id == patient_id or viewer_role == "Administrator":
+        if viewer_id == patient_id or viewer_role == "Administrator" or viewer_role == "Doctor":
             history = healthcare_blockchain.get_patient_history(patient_id)
             if history:
                 flash(f"✅ Successfully retrieved {len(history)} records for patient {patient_id}", "success")
-                log_action(f"ACCESS: {viewer_id} viewed history for {patient_id}")
+                log_action(f"ACCESS: {viewer_id} ({viewer_role}) viewed history for {patient_id}") # Log with role
             else:
                 flash(f"No medical records found for patient {patient_id}", "info")
         else:
             flash("🚫 Access Denied: You are not authorized to view this patient's records.", "danger")
             log_action(f"ACCESS DENIED: {viewer_id} tried to access records for {patient_id}")
-            
+           
     return render_template("view_history.html", history=history)
 
 

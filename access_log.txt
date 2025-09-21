@@ -20,3 +20,10 @@
 [2025-09-21 23:01:43] DELEGATES ELECTED: dr_alice, dr_bob
 [2025-09-21 23:07:25] TRANSACTION ADDED: DIAG-001 by dr_alice for patient_x
 [2025-09-21 23:07:25] TRANSACTION: Doctor dr_alice created record DIAG-001 for patient_x
+[2025-09-21 23:19:37] CONSENSUS: Block forged by delegate dr_alice. Hash: 3644cc6686a9bb817d0d9168fa697bee1eaaee8ba4fc759f3adb667b5afecd36
+[2025-09-21 23:19:37] BLOCK FORGED: Delegate dr_alice forged block #1
+[2025-09-21 23:21:41] ACCESS DENIED: dr_alice tried to access records for patient_x
+[2025-09-21 23:23:34] ACCESS: dr_alice (Doctor) viewed history for patient_x
+[2025-09-21 23:30:34] ADMIN: admin viewed the access log.
+[2025-09-21 23:32:28] ACCESS DENIED: patient_x tried to access records for patient_y
+[2025-09-21 23:32:34] ADMIN: admin viewed the access log.
