@@ -14,7 +14,7 @@ In the modern healthcare landscape, managing patient records securely is a param
 
 This project, **MedChain**, addresses these challenges by implementing a secure, tamper-proof patient record management system using blockchain technology.
 
-The platform is a fully functional web application built with **Python** and **Flask**. It utilizes a custom blockchain with a **Delegated Proof-of-Stake (DPoS)** consensus mechanism, **digital signatures**, and a robust **patient consent model** to create a transparent and auditable environment for handling sensitive medical data.
+The platform is a fully functional web application built with **Python** and **Flask**. It utilizes a custom blockchain with a **Delegated Proof-of-Stake (DPoS)** consensus mechanism and a robust **patient consent model** to create a transparent and auditable environment for handling sensitive medical data.
 
 ---
 
@@ -85,8 +85,7 @@ Attributes in `Transaction` class:
 - `hospital_id`, `doctor_id`, `patient_id`, `insurance_id`  
 - `record_id`, `record_type`, `operation` (Add/Update/Share)  
 - `prescription`, `amount`, `timestamp`  
-- Additional security fields: `signature`, `target_id` (for sharing)
-
+  
 ### **Block Structure**
 Attributes in `Block` class:
 - `timestamp`  
