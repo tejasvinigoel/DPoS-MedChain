@@ -777,6 +777,18 @@
                     Cast Vote
                 </a>
             </div>
+
+            <div class="card">
+                <div class="card-icon">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <h3>Chain Integrity</h3>
+                <p>Run a full validation check on the blockchain to detect any tampering or inconsistencies.</p>
+                <a href="{{ url_for('validate') }}" class="btn">
+                    <i class="fas fa-check-double"></i>
+                    Validate Chain
+                </a>
+            </div>
         </div>
         {% endblock %}
     </div>

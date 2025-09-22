@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="hero">
+    <h1>Patient Dashboard</h1>
+    <p>Review and approve new medical records that require your consent.</p>
+</div>
+
+<div class="card" style="max-width: 800px; margin: 0 auto 2rem;">
+    <form method="POST">
+        <div class="mb-3">
+            <label for="patient_id" class="form-label">Your Patient ID</label>
+            <input type="text" class="form-control" id="patient_id" name="patient_id" placeholder="Enter your patient ID to view records" value="{{ patient_id if patient_id else '' }}" required>
+        </div>
+        <button type="submit" class="btn">
+            <i class="fas fa-search"></i>
+            Check for Records
+        </button>
+    </form>
+</div>
+
+{% if records %}
+<div class="dashboard">
+    <h2 style="color:white; grid-column: 1 / -1; text-align:center; margin-bottom:1rem;">Records Awaiting Your Approval</h2>
+    {% for record in records %}
+    <div class="card">
+        <div class="card-icon"><i class="fas fa-file-medical-alt"></i></div>
+        <h3>{{ record.record_id }} ({{ record.record_type }})</h3>
+        <p><strong>Doctor:</strong> {{ record.doctor_id }} | <strong>Hospital:</strong> {{ record.hospital_id }}</p>
+        <p><strong>Details:</strong> {{ record.prescription }}</p>
+
+        <div style="display: flex; gap: 1rem; justify-content: center; margin-top: 1.5rem;">
+            <form action="{{ url_for('approve_record', patient_id=record.patient_id, tx_hash=record.hash) }}" method="POST">
+                <button type="submit" class="btn">
+                    <i class="fas fa-check-circle"></i>
+                    Approve
+                </button>
+            </form>
+            <form action="{{ url_for('deny_record', patient_id=record.patient_id, tx_hash=record.hash) }}" method="POST">
+                <button type="submit" class="btn" style="background: linear-gradient(45deg, #ff6b6b, #f06595);">
+                    <i class="fas fa-times-circle"></i>
+                    Deny
+                </button>
+            </form>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% elif patient_id %}
+    <div class="card" style="max-width: 800px; margin: 2rem auto; text-align:center;">
+        <h3 style="color:white;">No Pending Records</h3>
+        <p style="color: rgba(255,255,255,0.8);">There are currently no new medical records waiting for your approval.</p>
+    </div>
+{% endif %}
+
+<style>
+.form-label {
+    color: white;
+}
+.form-control {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: white;
+}
+</style>
+{% endblock %}

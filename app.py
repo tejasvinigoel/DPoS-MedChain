@@ -217,5 +217,25 @@ def view_block_detail(block_index):
     block_detail = { 'index': block_index, 'timestamp': block.timestamp, 'merkle_root': block.merkle_root, 'previous_hash': block.previous_hash, 'nonce': block.nonce, 'hash': block.hash, 'transactions': [tx.to_dict() for tx in block.transactions], 'transaction_count': len(block.transactions) }
     return render_template("view_block_detail.html", block=block_detail)
 
+@app.route("/validate")
+def validate():
+    is_valid = healthcare_blockchain.validate_chain()
+    if is_valid:
+        flash("Chain is valid and has not been tampered with!", "success")
+    else:
+        flash("CHAIN INVALID! Tampering has been detected. Check logs for details.", "danger")
+    return redirect(url_for("index"))
+
+@app.route("/deny_record/<patient_id>/<tx_hash>", methods=["POST"])
+def deny_record(patient_id, tx_hash):
+    success = healthcare_blockchain.deny_transaction(tx_hash, patient_id)
+    if success:
+        save_blockchain(healthcare_blockchain)
+        flash("Record denied and removed successfully.", "info")
+    else:
+        flash("Error denying record.", "danger")
+    
+    return redirect(url_for('patient_dashboard'))
+
 if __name__ == "__main__":
     app.run(debug=True, port=8000)

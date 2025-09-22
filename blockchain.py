@@ -227,3 +227,52 @@ class Blockchain:
                 if tx.patient_id == patient_id:
                     history.append(tx.to_dict())
         return history
+    
+    def validate_chain(self):
+        """
+        Validates the integrity of the entire blockchain.
+        Returns True if the chain is valid, False otherwise.
+        """
+        # Iterate from the second block to the end of the chain
+        for i in range(1, len(self.chain)):
+            current_block = self.chain[i]
+            previous_block = self.chain[i-1]
+
+            # 1. Verify the previous_hash link
+            if current_block.previous_hash != previous_block.hash:
+                print(f"Chain Invalid: Block #{i}'s previous_hash does not match Block #{i-1}'s hash.")
+                log_action(f"TAMPER DETECTED: Chain invalid at Block #{i} (previous_hash mismatch).")
+                return False
+
+            # 2. Verify the block's own hash integrity
+            if current_block.hash != current_block.calculate_hash():
+                print(f"Chain Invalid: Block #{i}'s hash is incorrect.")
+                log_action(f"TAMPER DETECTED: Block #{i} content has been altered (hash mismatch).")
+                return False
+            
+            # 3. Verify the Merkle root to ensure transaction list integrity
+            if current_block.merkle_root != current_block.calculate_merkle_root():
+                print(f"Chain Invalid: Block #{i}'s Merkle root is incorrect.")
+                log_action(f"TAMPER DETECTED: Block #{i}'s transactions have been altered (Merkle root mismatch).")
+                return False
+        
+        # If the loop completes, the chain is valid
+        log_action("CHAIN VALIDATION: Chain integrity verified successfully.")
+        return True
+    
+    def deny_transaction(self, tx_hash, patient_id):
+        """
+        Denies a transaction waiting for consent and removes it.
+        """
+        for tx in self.pending_consent_transactions:
+            if tx.hash == tx_hash:
+                # Security check: Does the denier own this record?
+                if tx.patient_id != patient_id:
+                    log_action(f"CONSENT DENY FAILED: {patient_id} tried to deny record for {tx.patient_id}")
+                    return False # Unauthorized
+
+                self.pending_consent_transactions.remove(tx)
+                # This is the new log entry for the audit trail
+                log_action(f"CONSENT DENIED: {patient_id} denied record {tx.record_id} from Dr. {tx.doctor_id}.")
+                return True
+        return False # Transaction not found
