@@ -1,5 +1,14 @@
 # **MedChain: A DPoS Healthcare Blockchain Platform**
 
+## **Group Members**
+
+| Name               | ID             |
+|-------------------|----------------|
+| Tejasvini Goel    | 2022A7PS1672H  |
+| Simran Sesha Rao  | 2022A7PS0002H  |
+| Simran Singh      | 2022A7PS0003H  |
+| Ruchi Harge       | 2022B4A70942H  |
+
 ## **Introduction**
 In the modern healthcare landscape, managing patient records securely is a paramount challenge. Traditional centralized systems are often vulnerable to data tampering, unauthorized edits, and disputes over record authenticity.  
 
