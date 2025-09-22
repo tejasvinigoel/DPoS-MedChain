@@ -40,7 +40,12 @@
                 <option>Share</option>
             </select>
         </div>
-                
+
+        <div class="mb-3" id="target_id_field" style="display: none;">
+            <label for="target_id" class="form-label">Share With User ID</label>
+            <input type="text" class="form-control" id="target_id" name="target_id" placeholder="Enter the User ID to grant access to">
+        </div>
+        
         <div class="mb-3">
             <label for="prescription" class="form-label">Details (Prescription/Test)</label>
             <textarea class="form-control" id="prescription" name="prescription" rows="4" required></textarea>
@@ -53,10 +58,24 @@
         
         <button type="submit" class="btn">
             <i class="fas fa-plus"></i>
-            Add Record to Blockchain
+            Submit for Consent
         </button>
     </form>
 </div>
+
+<script>
+    document.getElementById('operation').addEventListener('change', function() {
+        var targetField = document.getElementById('target_id_field');
+        var targetInput = document.getElementById('target_id');
+        if (this.value === 'Share') {
+            targetField.style.display = 'block';
+            targetInput.required = true;
+        } else {
+            targetField.style.display = 'none';
+            targetInput.required = false;
+        }
+    });
+</script>
 
 <style>
 .form-label {

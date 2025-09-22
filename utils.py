@@ -1,5 +1,3 @@
-# utils.py
-
 import datetime
 
 def log_action(action):
