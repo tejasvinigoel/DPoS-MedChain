@@ -1,8 +1,6 @@
 import datetime
 import hashlib
 from utils import log_action
-from cryptography.hazmat.primitives.asymmetric import rsa, padding
-from cryptography.hazmat.primitives import hashes, serialization
 
 class Transaction:
     def __init__(self, hospital_id, doctor_id, patient_id, insurance_id, record_id, record_type, operation, prescription, amount, target_id=None):
@@ -18,19 +16,17 @@ class Transaction:
         self.target_id = target_id
         self.timestamp = datetime.datetime.now().isoformat()
         self.consent_status = "pending"
-        self.signature = None
 
     @property
     def hash(self):
         return self.calculate_hash()
 
     def to_dict(self):
-        sig_hex = self.signature.hex() if self.signature else None
         return {
             "hospital_id": self.hospital_id, "doctor_id": self.doctor_id, "patient_id": self.patient_id,
             "insurance_id": self.insurance_id, "record_id": self.record_id, "record_type": self.record_type,
             "operation": self.operation, "prescription": self.prescription, "amount": self.amount,
-            "target_id": self.target_id, "timestamp": self.timestamp, "signature": sig_hex
+            "target_id": self.target_id, "timestamp": self.timestamp
         }
 
     def calculate_hash(self):
@@ -86,62 +82,33 @@ class Blockchain:
 
     def register_user(self, user_id, name, role, password_hash):
         if user_id in self.users: return False
-        private_key = rsa.generate_private_key(public_exponent=65537, key_size=2048)
-        public_key = private_key.public_key()
         self.users[user_id] = {
-            "name": name, "role": role, "password_hash": password_hash,
-            "public_key": public_key.public_bytes(encoding=serialization.Encoding.PEM, format=serialization.PublicFormat.SubjectPublicKeyInfo),
-            "private_key": private_key.private_bytes(encoding=serialization.Encoding.PEM, format=serialization.PrivateFormat.PKCS8, encryption_algorithm=serialization.NoEncryption())
+            "name": name,
+            "role": role,
+            "password_hash": password_hash
         }
         self.stakes.setdefault(user_id, 0)
-        if role == "Patient": self.access_control.setdefault(user_id, set())
+        if role == "Patient":
+            self.access_control.setdefault(user_id, set())
         log_action(f"ADMIN ACTION: Registered user {user_id} ({name}) as {role}.")
         return True
 
-    def create_and_sign_transaction(self, hospital_id, doctor_id, patient_id, insurance_id, record_type, operation, prescription, amount, target_id=None):
+    def add_transaction(self, hospital_id, doctor_id, patient_id, insurance_id, record_type, operation, prescription, amount, target_id=None):
         self.record_id_counter += 1
         new_record_id = f"REC-{self.record_id_counter}"
         new_tx = Transaction(
             hospital_id, doctor_id, patient_id, insurance_id, new_record_id,
             record_type, operation, prescription, amount, target_id
         )
-        if self.sign_transaction(new_tx, doctor_id):
-            self.pending_consent_transactions.append(new_tx)
-            log_action(f"CONSENT PENDING: Signed record {new_tx.record_id} by {doctor_id} for {patient_id}")
-            return True
-        log_action(f"SIGNATURE FAILED: Could not sign transaction from {doctor_id}")
-        return False
-
-    def sign_transaction(self, transaction, user_id):
-        user = self.users.get(user_id)
-        if not user or 'private_key' not in user: return False
-        private_key = serialization.load_pem_private_key(user['private_key'], password=None)
-        signature = private_key.sign(
-            transaction.hash.encode(), padding.PSS(mgf=padding.MGF1(hashes.SHA256()), salt_length=padding.PSS.MAX_LENGTH), hashes.SHA256()
-        )
-        transaction.signature = signature
+        self.pending_consent_transactions.append(new_tx)
+        log_action(f"CONSENT PENDING: Record {new_tx.record_id} by {doctor_id} for {patient_id}")
         return True
-
-    def verify_transaction(self, transaction):
-        sender = self.users.get(transaction.doctor_id)
-        if not sender or not transaction.signature: return False
-        public_key = serialization.load_pem_public_key(sender['public_key'])
-        try:
-            public_key.verify(
-                transaction.signature, transaction.hash.encode(), padding.PSS(mgf=padding.MGF1(hashes.SHA256()), salt_length=padding.PSS.MAX_LENGTH), hashes.SHA256()
-            )
-            return True
-        except Exception:
-            return False
 
     def approve_transaction(self, tx_hash, patient_id):
         for tx in self.pending_consent_transactions:
             if tx.hash == tx_hash:
                 if tx.patient_id != patient_id:
                     log_action(f"CONSENT FAILED: {patient_id} tried to approve record for {tx.patient_id}")
-                    return False
-                if not self.verify_transaction(tx):
-                    log_action(f"CONSENT FAILED: Invalid signature on record {tx.record_id}")
                     return False
                 tx.consent_status = "approved"
                 self.pending_transactions.append(tx)
@@ -153,9 +120,7 @@ class Blockchain:
     def deny_transaction(self, tx_hash, patient_id):
         for tx in self.pending_consent_transactions:
             if tx.hash == tx_hash:
-                if tx.patient_id != patient_id:
-                    log_action(f"CONSENT DENY FAILED: {patient_id} tried to deny record for {tx.patient_id}")
-                    return False
+                if tx.patient_id != patient_id: return False
                 self.pending_consent_transactions.remove(tx)
                 log_action(f"CONSENT DENIED: {patient_id} denied record {tx.record_id} from Dr. {tx.doctor_id}.")
                 return True
@@ -214,7 +179,6 @@ class Blockchain:
         if not self.delegates or delegate_id not in self.delegates: return None
         if delegate_id != self.delegates[self.current_delegate_index]: return None
         if not self.pending_transactions: return None
-        
         last_block = self.get_last_block()
         new_block = Block(
             transactions=self.pending_transactions.copy(),

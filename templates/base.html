@@ -11,7 +11,6 @@
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
-            color: #333;
         }
         .navbar {
             background: rgba(255, 255, 255, 0.05);
@@ -52,28 +51,20 @@
             gap: 0.5rem;
             font-weight: 500;
         }
-        .nav-link:hover {
-            background: rgba(255, 255, 255, 0.1);
-            transform: translateY(-2px);
-            color: white;
-        }
+        .nav-link:hover { background: rgba(255, 255, 255, 0.1); }
         .container { max-width: 1200px; margin: 0 auto; padding: 2rem; }
         .alert {
             background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
             border-radius: 10px;
             padding: 1rem 1.5rem;
             margin-bottom: 1rem;
             border-left: 4px solid;
             color: white;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
         }
-        .alert.alert-success { border-left-color: #28a745; background: rgba(40, 167, 69, 0.1); }
-        .alert.alert-danger { border-left-color: #dc3545; background: rgba(220, 53, 69, 0.1); }
-        .alert.alert-warning { border-left-color: #ffc107; background: rgba(255, 193, 7, 0.1); }
-        .alert.alert-info { border-left-color: #17a2b8; background: rgba(23, 162, 184, 0.1); }
+        .alert.alert-success { border-left-color: #28a745; }
+        .alert.alert-danger { border-left-color: #dc3545; }
+        .alert.alert-warning { border-left-color: #ffc107; }
+        .alert.alert-info { border-left-color: #17a2b8; }
         .hero { text-align: center; color: white; margin-bottom: 3rem; }
         .hero h1 {
             font-size: 3rem;
@@ -81,7 +72,6 @@
             background: linear-gradient(45deg, #4facfe, #00f2fe);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            background-clip: text;
         }
         .hero p { font-size: 1.2rem; opacity: 0.9; max-width: 600px; margin: 0 auto; }
         .dashboard { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin-bottom: 3rem; }
@@ -108,22 +98,21 @@
             align-items: center;
             gap: 0.5rem;
             font-weight: 600;
-            transition: all 0.3s ease;
             cursor: pointer;
+            transition: all 0.3s ease;
         }
-        .btn:hover { transform: translateY(-2px); box-shadow: 0 10px 20px rgba(79, 172, 254, 0.3); color: white; }
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 10px 20px rgba(79, 172, 254, 0.3); }
         .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1.5rem; margin-bottom: 3rem; }
         .stat-card {
             background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
             border-radius: 15px;
             padding: 1.5rem;
             text-align: center;
             color: white;
         }
-        .stat-number { font-size: 2.5rem; font-weight: 700; color: #4facfe; display: block; }
+        .stat-number { font-size: 2.5rem; font-weight: 700; color: #4facfe; }
         .stat-label { opacity: 0.8; margin-top: 0.5rem; font-size: 0.9rem;}
-        .blockchain-chain { display: flex; align-items: center; gap: 0; margin: 2rem 0; padding: 2rem; background: rgba(255, 255, 255, 0.05); border-radius: 15px; overflow-x: auto; min-height: 200px; }
+        .blockchain-chain { display: flex; align-items: center; margin: 2rem 0; padding: 2rem; background: rgba(255, 255, 255, 0.05); border-radius: 15px; overflow-x: auto; min-height: 200px; }
         .chain-block {
             background: linear-gradient(135deg, rgba(79, 172, 254, 0.2), rgba(0, 242, 254, 0.2));
             border: 2px solid rgba(79, 172, 254, 0.4);
@@ -134,19 +123,17 @@
             transition: all 0.3s ease;
             position: relative;
             margin-right: 2rem;
+            text-decoration: none;
         }
         .chain-block:hover { transform: translateY(-3px) scale(1.02); box-shadow: 0 10px 25px rgba(79, 172, 254, 0.3); border-color: #4facfe; }
         .chain-block:last-child { margin-right: 0; }
-        .chain-block:last-child .connection-arrow { display: none; }
-        .block-number { display: flex; align-items: center; gap: 0.5rem; color: white; font-weight: 600; margin-bottom: 0.75rem; padding-bottom: 0.5rem; border-bottom: 1px solid rgba(255, 255, 255, 0.2); }
+        .block-number { display: flex; align-items: center; gap: 0.5rem; color: white; font-weight: 600; margin-bottom: 0.75rem; border-bottom: 1px solid rgba(255, 255, 255, 0.2); }
         .block-number i { color: #4facfe; }
         .block-info { display: flex; flex-direction: column; gap: 0.5rem; }
         .info-item { display: flex; justify-content: space-between; font-size: 0.85rem; }
         .label { color: rgba(255, 255, 255, 0.7); }
-        .value { color: white; font-family: 'Courier New', monospace; font-weight: 600; }
-        .connection-arrow { position: absolute; right: -1.5rem; top: 50%; transform: translateY(-50%); color: #4facfe; font-size: 1.2rem; }
+        .value { color: white; font-family: 'Courier New', monospace; }
         .empty-state { display: flex; flex-direction: column; align-items: center; justify-content: center; color: rgba(255, 255, 255, 0.6); padding: 3rem; text-align: center; min-height: 200px; }
-        .empty-state i { font-size: 3rem; margin-bottom: 1rem; opacity: 0.3; }
     </style>
 </head>
 <body>
@@ -158,27 +145,24 @@
             </a>
             <ul class="nav-menu" id="navMenu">
                 {% if session.user_id %}
+                    <!-- Links for LOGGED-IN users -->
                     <li><a href="{{ url_for('index') }}" class="nav-link"><i class="fas fa-home"></i> Home</a></li>
-                    
                     {% if session.role == 'Doctor' %}
                         <li><a href="{{ url_for('add_record') }}" class="nav-link"><i class="fas fa-plus-circle"></i> Add Record</a></li>
                     {% endif %}
-
                     {% if session.role == 'Patient' %}
                         <li><a href="{{ url_for('patient_dashboard') }}" class="nav-link"><i class="fas fa-user-check"></i> Consent</a></li>
                     {% endif %}
-                    
                     <li><a href="{{ url_for('view_history') }}" class="nav-link"><i class="fas fa-history"></i> History</a></li>
                     <li><a href="{{ url_for('stake') }}" class="nav-link"><i class="fas fa-coins"></i> Stake</a></li>
                     <li><a href="{{ url_for('vote') }}" class="nav-link"><i class="fas fa-vote-yea"></i> Vote</a></li>
-
                     {% if session.role == 'Administrator' %}
                         <li><a href="{{ url_for('view_access_log') }}" class="nav-link"><i class="fas fa-clipboard-list"></i> Access Log</a></li>
                     {% endif %}
-                    
                     <li class="nav-link" style="cursor: default; font-weight: 600;">{{ session.name }}</li>
                     <li><a href="{{ url_for('logout') }}" class="nav-link"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
                 {% else %}
+                    <!-- Links for GUESTS -->
                     <li><a href="{{ url_for('login') }}" class="nav-link"><i class="fas fa-sign-in-alt"></i> Login</a></li>
                     <li><a href="{{ url_for('register_user') }}" class="nav-link"><i class="fas fa-user-plus"></i> Register</a></li>
                 {% endif %}
@@ -191,10 +175,6 @@
           {% if messages %}
             {% for category, message in messages %}
               <div class="alert alert-{{ category }}">
-                {% if category == 'success' %}<i class="fas fa-check-circle"></i>{% endif %}
-                {% if category == 'danger' %}<i class="fas fa-exclamation-triangle"></i>{% endif %}
-                {% if category == 'warning' %}<i class="fas fa-exclamation-circle"></i>{% endif %}
-                {% if category == 'info' %}<i class="fas fa-info-circle"></i>{% endif %}
                 {{ message }}
               </div>
             {% endfor %}
@@ -208,36 +188,15 @@
         </div>
 
         <div class="stats">
-            <div class="stat-card">
-                <span class="stat-number">{{ stats.total_records if stats else '0' }}</span>
-                <div class="stat-label">Total Records</div>
-            </div>
-            <div class="stat-card">
-                <span class="stat-number">{{ stats.total_blocks if stats else '0' }}</span>
-                <div class="stat-label">Total Blocks</div>
-            </div>
-            <div class="stat-card">
-                <span class="stat-number">{{ stats.verified_users if stats else '0' }}</span>
-                <div class="stat-label">Verified Users</div>
-            </div>
-            <div class="stat-card">
-                <span class="stat-number">{{ stats.pending_consent if stats else '0' }}</span>
-                <div class="stat-label">Pending Consent</div>
-            </div>
-            <div class="stat-card">
-                <span class="stat-number">{{ stats.pending_transactions if stats else '0' }}</span>
-                <div class="stat-label">Pending Forging</div>
-            </div>
-            <div class="stat-card">
-                <span class="stat-number">{{ stats.current_delegates if stats else '0' }}</span>
-                <div class="stat-label">Active Delegates</div>
-            </div>
+            <div class="stat-card"><span class="stat-number">{{ stats.total_records or '0' }}</span><div class="stat-label">Total Records</div></div>
+            <div class="stat-card"><span class="stat-number">{{ stats.total_blocks or '0' }}</span><div class="stat-label">Total Blocks</div></div>
+            <div class="stat-card"><span class="stat-number">{{ stats.verified_users or '0' }}</span><div class="stat-label">Verified Users</div></div>
+            <div class="stat-card"><span class="stat-number">{{ stats.pending_consent or '0' }}</span><div class="stat-label">Pending Consent</div></div>
+            <div class="stat-card"><span class="stat-number">{{ stats.pending_transactions or '0' }}</span><div class="stat-label">Pending Forging</div></div>
+            <div class="stat-card"><span class="stat-number">{{ stats.current_delegates or '0' }}</span><div class="stat-label">Active Delegates</div></div>
         </div>
 
-        <div class="hero">
-            <p>Click any block to view complete details and transactions.</p>
-        </div>
-
+        <div class="hero"><p>Click any block to view complete details and transactions.</p></div>
         <div class="blockchain-chain">
             {% for block in blocks %}
             <a href="{{ url_for('view_block_detail', block_index=block.index) }}" class="chain-block">
@@ -246,14 +205,12 @@
                     <div class="info-item"><span class="label">Transactions:</span><span class="value">{{ block.transaction_count }}</span></div>
                     <div class="info-item"><span class="label">Hash:</span><span class="value">{{ block.hash[:8] if block.hash else 'N/A' }}...</span></div>
                 </div>
-                <div class="connection-arrow"><i class="fas fa-arrow-right"></i></div>
             </a>
-            {% endfor %}
-            {% if not blocks %}
+            {% else %}
             <div class="empty-state">
                 <i class="fas fa-cube"></i><h3>No Blocks Found</h3><p>Add records and forge blocks to see the blockchain.</p>
             </div>
-            {% endif %}
+            {% endfor %}
         </div>
 
         <div class="dashboard">
@@ -266,30 +223,35 @@
             <div class="card">
                 <div class="card-icon"><i class="fas fa-cubes"></i></div>
                 <h3>Block Forging</h3>
-                <p>Participate in the consensus by forging new blocks. Only available to elected delegates.</p>
+                <p>Forge approved records into a new block. Only available to elected delegates.</p>
                 <a href="{{ url_for('forge_block') }}" class="btn"><i class="fas fa-hammer"></i> Forge Block</a>
             </div>
             <div class="card">
                 <div class="card-icon"><i class="fas fa-coins"></i></div>
-                <h3>Staking & Voting</h3>
-                <p>Stake tokens to participate in network governance and vote for block-forging delegates.</p>
-                <a href="{{ url_for('stake') }}" class="btn"><i class="fas fa-coins"></i> Stake / Vote</a>
+                <h3>Stake Tokens</h3>
+                <p>Stake tokens to increase your influence and participate in network governance.</p>
+                <a href="{{ url_for('stake') }}" class="btn"><i class="fas fa-hand-holding-usd"></i> Go to Staking</a>
+            </div>
+            <div class="card">
+                <div class="card-icon"><i class="fas fa-vote-yea"></i></div>
+                <h3>Cast Vote</h3>
+                <p>Use your staked weight to vote for trusted candidates to become delegates.</p>
+                <a href="{{ url_for('vote') }}" class="btn"><i class="fas fa-person-booth"></i> Go to Voting</a>
+            </div>
+            <div class="card">
+                <div class="card-icon"><i class="fas fa-trophy"></i></div>
+                <h3>Run Election</h3>
+                <p>Finalize the voting period by running an election to appoint new delegates.</p>
+                <a href="{{ url_for('elect_delegates') }}" class="btn"><i class="fas fa-gavel"></i> Elect Delegates</a>
             </div>
             <div class="card">
                 <div class="card-icon"><i class="fas fa-shield-alt"></i></div>
                 <h3>Chain Integrity</h3>
-                <p>Run a full validation check on the blockchain to detect any tampering or inconsistencies.</p>
+                <p>Run a full validation check on the blockchain to detect any tampering.</p>
                 <a href="{{ url_for('validate') }}" class="btn"><i class="fas fa-check-double"></i> Validate Chain</a>
             </div>
         </div>
         {% endblock %}
     </div>
-
-<script>
-    // Simple script to handle menu toggle on mobile if needed
-    function toggleMenu() {
-        document.getElementById('navMenu').classList.toggle('active');
-    }
-</script>
 </body>
 </html>
