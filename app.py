@@ -168,12 +168,23 @@ def forge_block():
 @login_required
 def view_history():
     history = None
+    # This block handles the search form submission from a Doctor or Admin
     if request.method == "POST":
+        viewer_id = session['user_id']
         patient_id = request.form["patient_id"]
-        if healthcare_blockchain.check_access(session['user_id'], patient_id):
+        
+        if healthcare_blockchain.check_access(viewer_id, patient_id):
             history = healthcare_blockchain.get_patient_history(patient_id)
+            log_action(f"ACCESS: {viewer_id} viewed history for {patient_id}")
         else:
-            flash("Access Denied.", "danger")
+            flash("Access Denied: You are not authorized to view this patient's records.", "danger")
+            log_action(f"ACCESS DENIED: {viewer_id} tried to access records for {patient_id}")
+            
+    # This new block automatically loads data for a Patient on page visit
+    if request.method == "GET" and session.get('role') == 'Patient':
+        patient_id = session['user_id']
+        history = healthcare_blockchain.get_patient_history(patient_id)
+            
     return render_template("view_history.html", history=history)
 
 @app.route("/stake", methods=["GET", "POST"])
@@ -188,6 +199,52 @@ def stake():
             flash(f"Staking failed.", "danger")
     return render_template("stake.html")
 
+@app.route("/vote", methods=["GET", "POST"])
+@login_required
+def vote():
+    if request.method == "POST":
+        voter_id = session['user_id']
+        candidate_id = request.form["candidate_id"]
+        if healthcare_blockchain.vote_for_candidate(voter_id, candidate_id):
+            save_blockchain(healthcare_blockchain)
+            flash(f"You successfully voted for {candidate_id}!", "success")
+        else:
+            flash("Voting failed. Ensure you have staked tokens and the candidate ID is valid.", "danger")
+        return redirect(url_for("index"))
+    
+    # Pass a list of potential candidates (all users except the voter)
+    candidates = [user for user in healthcare_blockchain.users if user != session.get('user_id')]
+    return render_template("vote.html", candidates=candidates)
+
+@app.route("/elect_delegates")
+@login_required
+def elect_delegates():
+    new_delegates = healthcare_blockchain.elect_delegates()
+    if new_delegates:
+        save_blockchain(healthcare_blockchain)
+        flash(f"Delegates elected successfully: {', '.join(new_delegates)}!", "success")
+    else:
+        flash("Election failed. No votes have been cast.", "warning")
+    return redirect(url_for("index"))
+
+@app.route("/view_access_log")
+@login_required
+def view_access_log():
+    # Only allow administrators to view the log
+    if session.get('role') != 'Administrator':
+        flash("Access Denied: Only administrators can view the access log.", "danger")
+        return redirect(url_for("index"))
+    
+    log_content = "Access log is empty or file not found."
+    try:
+        with open("access_log.txt", "r") as f:
+            log_content = f.read()
+        log_action(f"ADMIN: {session['user_id']} viewed the access log.")
+    except FileNotFoundError:
+        flash("No access log file found.", "warning")
+        
+    return render_template("view_access_log.html", log_content=log_content)
+
 @app.route("/validate")
 @login_required
 def validate():
@@ -196,6 +253,43 @@ def validate():
     else:
         flash("CHAIN INVALID! Tampering has been detected.", "danger")
     return redirect(url_for("index"))
+
+@app.route("/view_blocks")
+@login_required
+def view_blocks():
+    """View a list of all blocks in the chain."""
+    blocks_data = []
+    for i, block in enumerate(healthcare_blockchain.chain):
+        blocks_data.append({
+            'index': i,
+            'timestamp': block.timestamp,
+            'hash': block.hash,
+            'previous_hash': block.previous_hash,
+            'transaction_count': len(block.transactions)
+        })
+    return render_template("view_blocks.html", blocks=blocks_data)
+
+
+@app.route("/view_block/<int:block_index>")
+@login_required
+def view_block_detail(block_index):
+    """View detailed information for a specific block."""
+    if block_index >= len(healthcare_blockchain.chain) or block_index < 0:
+        flash(f"Block #{block_index} does not exist!", "danger")
+        return redirect(url_for("index"))
+
+    block = healthcare_blockchain.chain[block_index]
+    block_detail = {
+        'index': block_index,
+        'timestamp': block.timestamp,
+        'merkle_root': block.merkle_root,
+        'previous_hash': block.previous_hash,
+        'nonce': block.nonce,
+        'hash': block.hash,
+        'transactions': [tx.to_dict() for tx in block.transactions],
+        'transaction_count': len(block.transactions)
+    }
+    return render_template("view_block_detail.html", block=block_detail)
 
 if __name__ == "__main__":
     app.run(debug=True, port=8000)
