@@ -1,4 +1,5 @@
 MedChain: A DPoS Healthcare Blockchain Platform
+
 Introduction
 In the modern healthcare landscape, managing patient records securely is a paramount challenge. Traditional centralized systems are often vulnerable to data tampering, unauthorized edits, and disputes over record authenticity. This project, MedChain, addresses these challenges by implementing a secure, tamper-proof patient record management system using blockchain technology.
 
@@ -64,8 +65,6 @@ Authorization: The check_access method in blockchain.py enforces the authorizati
 The patient themselves.
 
 An Administrator (for auditing purposes).
-
-A Doctor who has been explicitly granted permission by the patient via an approved "Share" transaction, which adds them to the patient's Access Control List (ACL).
 
 5. Access Logs
 
