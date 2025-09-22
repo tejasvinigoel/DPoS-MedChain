@@ -32,7 +32,7 @@ else:
         healthcare_blockchain.register_user(user_id, name, role, hashed_password)
     save_blockchain(healthcare_blockchain)
 
-# --- Helper Functions ---
+# Helper Functions
 def get_blockchain_stats():
     stats = {}
     stats['total_blocks'] = len(healthcare_blockchain.chain)
@@ -52,7 +52,7 @@ def login_required(f):
         return f(*args, **kwargs)
     return decorated_function
 
-# --- Authentication Routes ---
+#  Authentication Routes 
 @app.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
@@ -91,13 +91,14 @@ def register_user():
         return redirect(url_for("login"))
     return render_template("register_user.html")
 
-# --- Main Application Routes ---
+# Application Route
 @app.route("/")
 def index():
     stats = get_blockchain_stats()
     blocks = [{'index': i, 'hash': b.hash, 'transaction_count': len(b.transactions)} for i, b in enumerate(healthcare_blockchain.chain)]
     return render_template("base.html", stats=stats, blocks=blocks)
 
+# Medical Record Route
 @app.route("/add_record", methods=["GET", "POST"])
 @login_required
 def add_record():
@@ -117,6 +118,7 @@ def add_record():
         return redirect(url_for("index"))
     return render_template("add_record.html")
 
+# Patient Dashboard to View and Approve Records
 @app.route("/patient_dashboard")
 @login_required
 def patient_dashboard():
@@ -127,6 +129,7 @@ def patient_dashboard():
     pending_records = [tx for tx in healthcare_blockchain.pending_consent_transactions if tx.patient_id == patient_id]
     return render_template("patient_dashboard.html", records=pending_records)
 
+# Approve or Deny Records
 @app.route("/approve_record/<tx_hash>", methods=["POST"])
 @login_required
 def approve_record(tx_hash):
@@ -151,6 +154,7 @@ def deny_record(tx_hash):
         flash("Error denying record.", "danger")
     return redirect(url_for('patient_dashboard'))
 
+# Forging 
 @app.route("/forge_block", methods=["GET", "POST"])
 @login_required
 def forge_block():
@@ -163,6 +167,7 @@ def forge_block():
         return redirect(url_for("index"))
     return render_template("forge_block.html")
 
+# View Medical History
 @app.route("/view_history", methods=["GET", "POST"])
 @login_required
 def view_history():
@@ -178,6 +183,7 @@ def view_history():
         history = healthcare_blockchain.get_patient_history(session['user_id'])
     return render_template("view_history.html", history=history)
 
+#Staking 
 @app.route("/stake", methods=["GET", "POST"])
 @login_required
 def stake():
@@ -190,6 +196,7 @@ def stake():
             flash(f"Staking failed.", "danger")
     return render_template("stake.html")
 
+# Voting 
 @app.route("/vote", methods=["GET", "POST"])
 @login_required
 def vote():
@@ -203,6 +210,7 @@ def vote():
     candidates = [user for user in healthcare_blockchain.users if user != session.get('user_id')]
     return render_template("vote.html", candidates=candidates)
 
+# Elect Delegates
 @app.route("/elect_delegates")
 @login_required
 def elect_delegates():
@@ -214,6 +222,7 @@ def elect_delegates():
         flash("Election failed. No votes have been cast.", "warning")
     return redirect(url_for("index"))
 
+# Admin View Access Log
 @app.route("/view_access_log")
 @login_required
 def view_access_log():
@@ -229,6 +238,7 @@ def view_access_log():
         flash("No access log file found.", "warning")
     return render_template("view_access_log.html", log_content=log_content)
 
+# Validate Blockchain
 @app.route("/validate")
 @login_required
 def validate():
@@ -238,6 +248,7 @@ def validate():
         flash("CHAIN INVALID! Tampering has been detected.", "danger")
     return redirect(url_for("index"))
 
+#View Blocks
 @app.route("/view_blocks")
 @login_required
 def view_blocks():
