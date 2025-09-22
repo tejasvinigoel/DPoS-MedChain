@@ -96,5 +96,5 @@ Attributes in `Block` class:
 
 ### **Installation**
 ```bash
-git clone <your-repo-url>
+git clone https://github.com/tejasvinigoel/blockchaintrial.git
 pip install -r requirements.txt
