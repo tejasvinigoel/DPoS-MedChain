@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="hero">
+    <h1>Login to MedChain</h1>
+</div>
+<div class="card" style="max-width: 500px; margin: 0 auto;">
+    <form method="POST">
+        <div class="mb-3">
+            <label for="user_id" class="form-label">User ID</label>
+            <input type="text" class="form-control" id="user_id" name="user_id" required>
+        </div>
+        <div class="mb-3">
+            <label for="password" class="form-label">Password</label>
+            <input type="password" class="form-control" id="password" name="password" required>
+        </div>
+        <button type="submit" class="btn">Login</button>
+    </form>
+    <p class="text-center mt-3" style="color: white;">
+        No account? <a href="{{ url_for('register_user') }}" style="color: #4facfe;">Register here</a>
+    </p>
+</div>
+{% endblock %}
