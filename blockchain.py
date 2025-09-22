@@ -77,6 +77,7 @@ class Blockchain:
         self.chain = [self.create_genesis_block()]
         self.pending_transactions = []
         self.users = {}  # user_id -> {"name": name, "role": role}
+        self.record_id_counter = 0
         # DPoS-related data structures
         self.stakes = {}  # user_id -> stake_amount (int or float)
         self.votes = {}   # candidate_id -> total_votes (sum of stakes delegated to candidate)
@@ -91,10 +92,30 @@ class Blockchain:
     def get_last_block(self):
         return self.chain[-1]
 
-    def add_transaction(self, transaction):
-        self.pending_transactions.append(transaction)
-        log_action(f"TRANSACTION ADDED: {transaction.record_id} by {transaction.doctor_id} for {transaction.patient_id}")
+    def add_transaction(self, hospital_id, doctor_id, patient_id, insurance_id, record_type, operation, prescription, amount):
+        # 1. Increment the counter
+        self.record_id_counter += 1
+        # 2. Generate the new, unique record ID
+        new_record_id = f"REC-{self.record_id_counter}"
 
+        # 3. Create the Transaction object here
+        new_tx = Transaction(
+            hospital_id=hospital_id,
+            doctor_id=doctor_id,
+            patient_id=patient_id,
+            insurance_id=insurance_id,
+            record_id=new_record_id, # Use the generated ID
+            record_type=record_type,
+            operation=operation,
+            prescription=prescription,
+            amount=amount
+        )
+        
+        # 4. Add to the consent pool
+        self.pending_consent_transactions.append(new_tx)
+        log_action(f"CONSENT PENDING: Record {new_tx.record_id} by {new_tx.doctor_id} for {new_tx.patient_id}")
+    
+    
     # -------- User management --------
     def register_user(self, user_id, name, role):
         if user_id in self.users:

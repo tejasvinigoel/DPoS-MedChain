@@ -1,0 +1,5 @@
+[2025-09-22 00:38:44] ADMIN ACTION: Registered user admin (Admin User) as Administrator.
+[2025-09-22 00:38:44] ADMIN ACTION: Registered user dr_alice (Dr. Alice) as Doctor.
+[2025-09-22 00:38:44] ADMIN ACTION: Registered user dr_bob (Dr. Bob) as Doctor.
+[2025-09-22 00:38:44] ADMIN ACTION: Registered user patient_x (Patient X) as Patient.
+[2025-09-22 00:38:44] ADMIN ACTION: Registered user patient_y (Patient Y) as Patient.

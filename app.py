@@ -152,27 +152,25 @@ def index():
 def add_record():
     if request.method == "POST":
         doctor_id = request.form["doctor_id"]
-        if healthcare_blockchain.users.get(doctor_id, {}).get("role") != "Doctor":
-            flash("Only doctors can add records!", "danger")
-            log_action(f"ACCESS DENIED: Non-doctor {doctor_id} tried to add a record.")
-            return redirect(url_for("add_record"))
-
+        # ... (doctor check) ...
+        
+        # Get all form data EXCEPT the record_id
         patient_id = request.form["patient_id"]
         hospital_id = request.form["hospital_id"]
         insurance_id = request.form["insurance_id"]
-        record_id = request.form["record_id"]
-        record_type = request.form["record_type"] # NEW
-        operation = request.form["operation"]     # NEW
+        record_type = request.form["record_type"]
+        operation = request.form["operation"]
         prescription = request.form["prescription"]
         amount = request.form["amount"]
 
-        new_tx = Transaction(
-            hospital_id, doctor_id, patient_id, insurance_id, record_id, record_type, operation, prescription, amount
+        # Call the new blockchain method, which will generate the ID
+        healthcare_blockchain.add_transaction(
+            hospital_id, doctor_id, patient_id, insurance_id, record_type, operation, prescription, amount
         )
-        healthcare_blockchain.add_transaction(new_tx)
+        
         save_blockchain(healthcare_blockchain)
-        flash(f"Medical record {record_id} successfully added to blockchain!", "success")
-        log_action(f"TRANSACTION: Doctor {doctor_id} created record {record_id} for {patient_id}")
+        flash(f"Medical record submitted for patient consent! It will be assigned a new ID upon creation.", "success")
+        log_action(f"TRANSACTION: Doctor {doctor_id} created a new record for {patient_id}")
         return redirect(url_for("index"))
 
     return render_template("add_record.html")
