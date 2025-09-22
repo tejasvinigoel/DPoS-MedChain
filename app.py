@@ -75,7 +75,7 @@ def add_record():
         amount = request.form["amount"]
         target_id = request.form.get("target_id")
 
-        healthcare_blockchain.add_transaction(
+        healthcare_blockchain.create_and_sign_transaction(
             hospital_id, doctor_id, patient_id, insurance_id,
             record_type, operation, prescription, amount, target_id
         )

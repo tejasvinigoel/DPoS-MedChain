@@ -1,6 +1,8 @@
 import datetime
 import hashlib
 from utils import log_action
+from cryptography.hazmat.primitives.asymmetric import rsa, padding
+from cryptography.hazmat.primitives import hashes, serialization
 
 class Transaction:
     # FIXED: Added target_id=None to the constructor
@@ -17,6 +19,7 @@ class Transaction:
         self.target_id = target_id # The user access is being granted to
         self.timestamp = datetime.datetime.now().isoformat()
         self.consent_status = "pending"
+        self.signature = None 
 
     @property
     def hash(self):
@@ -86,30 +89,42 @@ class Blockchain:
         self.current_delegate_index = 0
         self.max_delegates = max_delegates
 
-    # FIXED: The add_transaction method now accepts target_id
-    def add_transaction(self, hospital_id, doctor_id, patient_id, insurance_id, record_type, operation, prescription, amount, target_id=None):
+    # REPLACE your old add_transaction method with this
+    def create_and_sign_transaction(self, hospital_id, doctor_id, patient_id, insurance_id, record_type, operation, prescription, amount, target_id=None):
         self.record_id_counter += 1
         new_record_id = f"REC-{self.record_id_counter}"
-        new_tx = Transaction(
-            hospital_id=hospital_id, doctor_id=doctor_id, patient_id=patient_id,
-            insurance_id=insurance_id, record_id=new_record_id, record_type=record_type,
-            operation=operation, prescription=prescription, amount=amount, target_id=target_id
-        )
-        self.pending_consent_transactions.append(new_tx)
-        log_action(f"CONSENT PENDING: Record {new_tx.record_id} by {new_tx.doctor_id} for {new_tx.patient_id}")
 
-    # ADDED: This entire method was missing
+        new_tx = Transaction(
+            hospital_id, doctor_id, patient_id, insurance_id, new_record_id,
+            record_type, operation, prescription, amount, target_id
+        )
+
+        # Sign the transaction immediately upon creation
+        if self.sign_transaction(new_tx, doctor_id):
+            self.pending_consent_transactions.append(new_tx)
+            log_action(f"CONSENT PENDING: Signed record {new_tx.record_id} by {doctor_id} for {patient_id}")
+            return True
+        else:
+            log_action(f"SIGNATURE FAILED: Could not sign transaction from {doctor_id}")
+            return False
+        
     def approve_transaction(self, tx_hash, patient_id):
         for tx in self.pending_consent_transactions:
             if tx.hash == tx_hash:
                 if tx.patient_id != patient_id:
-                    log_action(f"CONSENT FAILED: {patient_id} tried to approve record for {tx.patient_id}")
-                    return False # Unauthorized
+                    return False
+
+                # VERIFY SIGNATURE BEFORE APPROVING
+                if not self.verify_transaction(tx):
+                    log_action(f"CONSENT FAILED: Invalid signature on record {tx.record_id}")
+                    return False
+
+                # ... (rest of the method is the same) ...
                 tx.consent_status = "approved"
                 self.pending_transactions.append(tx)
                 self.pending_consent_transactions.remove(tx)
                 log_action(f"CONSENT APPROVED: {patient_id} approved record {tx.record_id}")
-                return tx # Return the transaction object on success
+                return tx
         return False
 
     # ... (The rest of your Blockchain class methods: grant_access, check_access, register_user, etc., are correct) ...
@@ -149,9 +164,34 @@ class Blockchain:
         if user_id in self.users:
             print(f"Error: User {user_id} already exists.")
             return False
-        self.users[user_id] = {"name": name, "role": role}
+
+        # Generate private/public key pair
+        private_key = rsa.generate_private_key(
+            public_exponent=65537,
+            key_size=2048,
+        )
+        public_key = private_key.public_key()
+
+        # Serialize keys to PEM format for storage
+        private_pem = private_key.private_bytes(
+            encoding=serialization.Encoding.PEM,
+            format=serialization.PrivateFormat.PKCS8,
+            encryption_algorithm=serialization.NoEncryption()
+        )
+        public_pem = public_key.public_bytes(
+            encoding=serialization.Encoding.PEM,
+            format=serialization.PublicFormat.SubjectPublicKeyInfo
+        )
+
+        self.users[user_id] = {
+            "name": name,
+            "role": role,
+            "public_key": public_pem,
+            "private_key": private_pem # For simulation purposes
+        }
+
+        # ... (rest of the method is the same)
         self.stakes.setdefault(user_id, 0)
-        # When a patient is registered, create an empty access set for them
         if role == "Patient":
             self.access_control.setdefault(user_id, set())
         print(f"User {name} registered as a {role}.")
@@ -276,3 +316,48 @@ class Blockchain:
                 log_action(f"CONSENT DENIED: {patient_id} denied record {tx.record_id} from Dr. {tx.doctor_id}.")
                 return True
         return False # Transaction not found
+    
+    def sign_transaction(self, transaction, user_id):
+        """Signs a transaction using the user's private key."""
+        user = self.users.get(user_id)
+        if not user or 'private_key' not in user:
+            return False # User or key not found
+        
+        private_key = serialization.load_pem_private_key(user['private_key'], password=None)
+        tx_hash = transaction.hash.encode() # The hash of the transaction data
+
+        signature = private_key.sign(
+            tx_hash,
+            padding.PSS(
+                mgf=padding.MGF1(hashes.SHA256()),
+                salt_length=padding.PSS.MAX_LENGTH
+            ),
+            hashes.SHA256()
+        )
+        transaction.signature = signature
+        return True
+
+    def verify_transaction(self, transaction):
+        """Verifies a transaction's signature using the sender's public key."""
+        sender_id = transaction.doctor_id
+        user = self.users.get(sender_id)
+        if not user or not transaction.signature:
+            return False
+
+        public_key = serialization.load_pem_public_key(user['public_key'])
+        tx_hash = transaction.hash.encode()
+
+        try:
+            public_key.verify(
+                transaction.signature,
+                tx_hash,
+                padding.PSS(
+                    mgf=padding.MGF1(hashes.SHA256()),
+                    salt_length=padding.PSS.MAX_LENGTH
+                ),
+                hashes.SHA256()
+            )
+            return True # Signature is valid
+        except Exception as e:
+            print(f"Signature verification failed: {e}")
+            return False # Signature is invalid
