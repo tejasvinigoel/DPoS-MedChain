@@ -2,21 +2,74 @@
 {% block content %}
 <div class="hero">
     <h1>Login to MedChain</h1>
+    <p>Access your secure healthcare blockchain account</p>
 </div>
+
 <div class="card" style="max-width: 500px; margin: 0 auto;">
+    <div class="card-icon" style="text-align: center; margin-bottom: 1rem;">
+        <i class="fas fa-user-shield" style="font-size: 2rem; color: #4facfe;"></i>
+    </div>
+    
     <form method="POST">
         <div class="mb-3">
             <label for="user_id" class="form-label">User ID</label>
             <input type="text" class="form-control" id="user_id" name="user_id" required>
         </div>
+        
         <div class="mb-3">
             <label for="password" class="form-label">Password</label>
             <input type="password" class="form-control" id="password" name="password" required>
         </div>
-        <button type="submit" class="btn">Login</button>
+        
+        <button type="submit" class="btn" style="width: 100%;">
+            <i class="fas fa-sign-in-alt"></i>
+            Login to MedChain
+        </button>
     </form>
-    <p class="text-center mt-3" style="color: white;">
-        No account? <a href="{{ url_for('register_user') }}" style="color: #4facfe;">Register here</a>
-    </p>
+    
+    <div style="text-align: center; margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid rgba(255, 255, 255, 0.1);">
+        <p style="color: rgba(255, 255, 255, 0.8); margin-bottom: 0.5rem;">
+            No account yet?
+        </p>
+        <a href="{{ url_for('register_user') }}" class="btn" style="background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2);">
+            <i class="fas fa-user-plus"></i>
+            Register New Account
+        </a>
+    </div>
 </div>
+
+<style>
+.form-label {
+    color: white;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+    display: block;
+}
+
+.form-control {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 10px;
+    color: white;
+    padding: 0.75rem 1rem;
+    width: 100%;
+    transition: all 0.3s ease;
+}
+
+.form-control:focus {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: #4facfe;
+    box-shadow: 0 0 0 0.2rem rgba(79, 172, 254, 0.25);
+    color: white;
+    outline: none;
+}
+
+.form-control::placeholder {
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.mb-3 {
+    margin-bottom: 1.5rem;
+}
+</style>
 {% endblock %}
